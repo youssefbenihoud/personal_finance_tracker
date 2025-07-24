@@ -4,7 +4,7 @@ from datetime import date, datetime
 from pathlib import Path
 from typing import List
 
-from finance_tracker.models import Transaction
+from models import Transaction
 
 
 # Pfad zur CSV-Datei
