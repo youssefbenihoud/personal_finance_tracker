@@ -1,3 +1,9 @@
+__pycache__/
+*.pyc
+.DS_Store
+.env
+data/*.csv  # Optional: um CSV nicht ins Repo zu laden (oder entfernen, wenn du Beispieldaten teilen willst)
+
 # Logs
 logs
 *.log
