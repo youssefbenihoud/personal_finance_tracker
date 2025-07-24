@@ -16,28 +16,38 @@ CSV_HEADER = ["amount", "description", "date", "category"]
 
 
 def ensure_csv_exists() -> None:
-    """Stellt sicher, dass die CSV-Datei mit korrektem Header existiert."""
+    """Stellt sicher, dass die CSV mit korrektem Header existiert."""
     DATA_DIR.mkdir(exist_ok=True)
+    
     if not CSV_FILE.exists():
+        # Falls die Datei nicht existiert → erstelle sie mit Header
         with open(CSV_FILE, mode="w", newline="", encoding="utf-8") as file:
             writer = csv.writer(file)
             writer.writerow(CSV_HEADER)
-        print(f"✅ CSV-Datei angelegt: {CSV_FILE}")
+        print(f"✅ CSV mit Header angelegt: {CSV_FILE}")
     else:
-        # Prüfe, ob die erste Zeile der Header ist
+        # Falls die Datei existiert → prüfe, ob erste Zeile der Header ist
         with open(CSV_FILE, mode="r", encoding="utf-8") as file:
             try:
                 first_line = file.readline().strip()
-                if first_line != ",".join(CSV_HEADER):
-                    print(f"⚠️  Header fehlt oder falsch – wird korrigiert.")
-                    # Backup der Daten
-                    data = file.read()
+                expected_header = ",".join(CSV_HEADER)
+                
+                if first_line != expected_header:
+                    print(f"⚠️  Header fehlt oder falsch. War: '{first_line}', erwartet: '{expected_header}'")
+                    print("🔧 Korrigiere CSV-Datei...")
+                    
+                    # Lies den gesamten Inhalt (ohne erste Zeile, falls kaputt)
+                    data_lines = file.readlines()
+                    
+                    # Schreibe neue Datei: Header + alte Daten
                     with open(CSV_FILE, mode="w", newline="", encoding="utf-8") as out_file:
                         writer = csv.writer(out_file)
                         writer.writerow(CSV_HEADER)
-                        out_file.write(data)
+                        out_file.writelines(data_lines)
+                        
+                    print("✅ Header wurde korrigiert.")
             except Exception as e:
-                print(f"❌ Fehler bei Header-Prüfung: {e}")
+                print(f"❌ Fehler beim Lesen der CSV: {e}")
 
 
 def save_transaction(transaction: Transaction) -> None:
