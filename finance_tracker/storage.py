@@ -4,7 +4,7 @@ from datetime import date, datetime
 from pathlib import Path
 from typing import List
 
-from models import Transaction
+from finance_tracker.models import Transaction
 
 
 # Pfad zur CSV-Datei
@@ -16,12 +16,28 @@ CSV_HEADER = ["amount", "description", "date", "category"]
 
 
 def ensure_csv_exists() -> None:
-    """Stellt sicher, dass die CSV-Datei mit Header existiert."""
+    """Stellt sicher, dass die CSV-Datei mit korrektem Header existiert."""
     DATA_DIR.mkdir(exist_ok=True)
     if not CSV_FILE.exists():
         with open(CSV_FILE, mode="w", newline="", encoding="utf-8") as file:
             writer = csv.writer(file)
             writer.writerow(CSV_HEADER)
+        print(f"✅ CSV-Datei angelegt: {CSV_FILE}")
+    else:
+        # Prüfe, ob die erste Zeile der Header ist
+        with open(CSV_FILE, mode="r", encoding="utf-8") as file:
+            try:
+                first_line = file.readline().strip()
+                if first_line != ",".join(CSV_HEADER):
+                    print(f"⚠️  Header fehlt oder falsch – wird korrigiert.")
+                    # Backup der Daten
+                    data = file.read()
+                    with open(CSV_FILE, mode="w", newline="", encoding="utf-8") as out_file:
+                        writer = csv.writer(out_file)
+                        writer.writerow(CSV_HEADER)
+                        out_file.write(data)
+            except Exception as e:
+                print(f"❌ Fehler bei Header-Prüfung: {e}")
 
 
 def save_transaction(transaction: Transaction) -> None:
