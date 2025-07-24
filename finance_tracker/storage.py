@@ -4,7 +4,7 @@ from datetime import date, datetime
 from pathlib import Path
 from typing import List
 
-from models import Transaction
+from finance_tracker.models import Transaction
 
 
 # Pfad zur CSV-Datei
@@ -17,41 +17,39 @@ CSV_HEADER = ["amount", "description", "date", "category"]
 
 def ensure_csv_exists() -> None:
     """Stellt sicher, dass die CSV mit korrektem Header existiert."""
+    print(f"🔧 Sicherstelle, dass DATA_DIR existiert: {DATA_DIR}")
     DATA_DIR.mkdir(exist_ok=True)
+    print(f"✅ DATA_DIR bereit: {DATA_DIR}")
+
+    print(f"🔍 Prüfe, ob CSV existiert: {CSV_FILE} -> {CSV_FILE.exists()}")
     
     if not CSV_FILE.exists():
-        # Falls die Datei nicht existiert → erstelle sie mit Header
+        print(f"📝 CSV existiert NICHT → erstelle neue Datei mit Header")
         with open(CSV_FILE, mode="w", newline="", encoding="utf-8") as file:
             writer = csv.writer(file)
             writer.writerow(CSV_HEADER)
-        print(f"✅ CSV mit Header angelegt: {CSV_FILE}")
+        print(f"✅ Header geschrieben: {CSV_HEADER}")
     else:
-        # Falls die Datei existiert → prüfe, ob erste Zeile der Header ist
+        print(f"🟢 CSV existiert bereits. Lese erste Zeile...")
         with open(CSV_FILE, mode="r", encoding="utf-8") as file:
-            try:
-                first_line = file.readline().strip()
-                expected_header = ",".join(CSV_HEADER)
-                
-                if first_line != expected_header:
-                    print(f"⚠️  Header fehlt oder falsch. War: '{first_line}', erwartet: '{expected_header}'")
-                    print("🔧 Korrigiere CSV-Datei...")
-                    
-                    # Lies den gesamten Inhalt (ohne erste Zeile, falls kaputt)
-                    data_lines = file.readlines()
-                    
-                    # Schreibe neue Datei: Header + alte Daten (ohne alte Header-Zeile)
-                    with open(CSV_FILE, mode="w", newline="", encoding="utf-8") as out_file:
-                        writer = csv.writer(out_file)
-                        writer.writerow(CSV_HEADER)
-                        out_file.writelines(data_lines)
-                        
-                    print("✅ Header wurde korrigiert.")
-            except Exception as e:
-                print(f"❌ Fehler beim Lesen der CSV: {e}")
-
+            first_line = file.readline().strip()
+            print(f"📁 Erste Zeile: '{first_line}'")
+            expected = ",".join(CSV_HEADER)
+            if first_line == expected:
+                print("✅ Header ist korrekt.")
+            else:
+                print(f"⚠️  Header falsch! Erwartet: '{expected}', Gefunden: '{first_line}'")
+                print("🔧 Korrigiere...")
+                data = file.read()
+                with open(CSV_FILE, mode="w", newline="", encoding="utf-8") as out_file:
+                    writer = csv.writer(out_file)
+                    writer.writerow(CSV_HEADER)
+                    out_file.write(data)
+                print("✅ Header korrigiert.")
 
 def save_transaction(transaction: Transaction) -> None:
     """Speichert eine einzelne Transaktion in der CSV-Datei."""
+    ensure_csv_exists()  # 🔴 WICHTIG: Sicherstellen, dass CSV existiert!
     with open(CSV_FILE, mode="a", newline="", encoding="utf-8") as file:
         writer = csv.writer(file)
         writer.writerow([
