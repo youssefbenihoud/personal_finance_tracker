@@ -1,7 +1,34 @@
 # 💰 Personal Finance Tracker
 
-Ein CLI-basierter Finanz-Tracker, um Einnahmen und Ausgaben einfach zu verwalten – **ohne externe Abhängigkeiten**.  
-Daten werden in einer CSV-Datei gespeichert: einfach, portabel und robust.
+Ein moderner Finanz-Tracker mit **CLI- und Web-Oberfläche**, um Einnahmen und Ausgaben einfach zu verwalten.  
+Daten werden lokal in einer CSV-Datei gespeichert – einfach, robust und portabel.
+
+🌐 **Live-Web-App**: [https://benihoud-personal-finance-tracker.streamlit.app](https://benihoud-personal-finance-tracker.streamlit.app)
+
+---
+
+## 🚀 Funktionen
+
+| CLI-Version | Web-Version |
+|------------|------------|
+| ✅ Transaktionen hinzufügen | ✅ Formularbasierte Eingabe |
+| ✅ Filtern nach Kategorie | ✅ Interaktive Tabelle |
+| ✅ Statistiken im Terminal | ✅ Diagramme (Balken, Kuchen) |
+| ✅ CSV-Speicherung | ✅ Automatische Aktualisierung |
+| | ✅ Kostenlos online nutzbar |
+
+---
+
+## 💻 Lokal nutzen
+
+### 1. Voraussetzungen
+- Python 3.8 oder höher
+- Pakete: `streamlit`, `pandas`, `matplotlib`
+
+Installation:
+```bash
+pip install streamlit pandas matplotlib
+```
 
 ✨ **Hauptfunktionen**:
 - Transaktionen hinzufügen (Betrag, Beschreibung, Kategorie, Datum)
@@ -9,6 +36,11 @@ Daten werden in einer CSV-Datei gespeichert: einfach, portabel und robust.
 - Statistiken anzeigen: Gesamtbilanz, Einnahmen, Ausgaben, Top-Kategorien
 - Automatische CSV-Verwaltung mit Header-Sicherung
 - Robust gegen fehlende oder fehlerhafte Dateien
+
+# Starte die Web-App
+```bash
+streamlit run web_app.py
+```
 
 ---
 
@@ -36,7 +68,7 @@ Dieser Befehl sagt Python: „Suche Module auch im aktuellen Ordner“.
 So kann from finance_tracker.cli import main_cli gefunden werden.
 ➡️ Dies ist eine gängige und professionelle Praxis bei strukturierten Python-Projekten.
 
-### add - neue Transkation hinzufügen
+** add - neue Transkation hinzufügen
 ```bash
 python scripts/main.py add --amount <Betrag> --description "<Text>" [--category "<Kategorie>"] [--date JJJJ-MM-TT]
 ```
