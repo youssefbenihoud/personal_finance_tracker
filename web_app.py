@@ -80,6 +80,14 @@ def main():
             if not expenses.empty:
                 top_cat = expenses.groupby("Kategorie")["Betrag"].sum().round(2).sort_values().head(5)
                 st.bar_chart(top_cat)
+            # Kuchendiagramm für Ausgaben nach Kategorie
+            st.subheader("Ausgaben nach Kategorie")
+            expense_by_cat = expenses.groupby("Kategorie")["Betrag"].sum().abs()  # positiv für Diagramm
+            if not expense_by_cat.empty:
+                st.write("Verteilung der Ausgaben:")
+                st.pyplot(expense_by_cat.plot.pie(autopct="%.1f%%").get_figure())
+            else:
+                st.info("Keine Ausgaben zum Anzeigen.")
 
 
 if __name__ == "__main__":
