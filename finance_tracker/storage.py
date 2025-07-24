@@ -39,7 +39,7 @@ def ensure_csv_exists() -> None:
                     # Lies den gesamten Inhalt (ohne erste Zeile, falls kaputt)
                     data_lines = file.readlines()
                     
-                    # Schreibe neue Datei: Header + alte Daten
+                    # Schreibe neue Datei: Header + alte Daten (ohne alte Header-Zeile)
                     with open(CSV_FILE, mode="w", newline="", encoding="utf-8") as out_file:
                         writer = csv.writer(out_file)
                         writer.writerow(CSV_HEADER)
